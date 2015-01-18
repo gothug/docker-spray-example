@@ -5,7 +5,7 @@
 FROM dockerfile/java
 
 # that's me!
-MAINTAINER Adam Warski, adam@warski.org
+MAINTAINER Vasily Kozhukhovskiy
 
 # we need this because the workdir is modified in dockerfile/java
 WORKDIR /
