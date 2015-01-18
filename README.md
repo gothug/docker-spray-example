@@ -25,7 +25,7 @@ Deploy HowTo
     docker build -t="gothug/spray-docker" .
     ```
 
-4. Run image locally (optional)
+4. Run image locally (optional) (correctly substitute image id, last param in docker run)
 
     ```
     docker run --rm -p 9090:8080 82a7df479a58
@@ -39,7 +39,7 @@ Deploy HowTo
     docker push gothug/spray-docker
     ```
 
-6. Pull & run image on Digital Ocean instance
+6. Pull & run image on Digital Ocean instance (correctly substitute image id, last param in docker run)
 
     ```
     ssh -i ~/.ssh/id_rsa_digitalocean root@188.166.11.149
