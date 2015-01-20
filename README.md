@@ -55,14 +55,8 @@ Deploy HowTo
     
 Test requests
 =============
-
-    ```
     curl "http://localhost:8080/request"
-    ```
-    
-    ```
     curl -v -X POST http://localhost:8080/request -H "Content-Type: application/json" -d '{"name": "Bob", "firstName": "Parr", "age": 32}'
-    ```
 
 Docker + Spray example (original)
 =================================
