@@ -4,7 +4,7 @@ name := "docker-spray-example"
 
 version := "1.0"
 
-scalaVersion := "2.11.0"
+scalaVersion := "2.11.2"
 
 resolvers += "spray repo" at "http://repo.spray.io"
 
@@ -16,8 +16,10 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.3.2",
   "io.spray" %% "spray-can" % sprayVersion,
   "io.spray" %% "spray-routing" % sprayVersion,
+  "io.spray" %% "spray-json" % "1.2.6",
   "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2",
-  "ch.qos.logback" % "logback-classic" % "1.1.2"
+  "ch.qos.logback" % "logback-classic" % "1.1.2",
+  "org.jsoup" % "jsoup" % "1.8.1"
 )
 
 assemblySettings
