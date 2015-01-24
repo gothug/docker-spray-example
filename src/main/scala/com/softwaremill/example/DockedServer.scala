@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorSystem, Props}
 import akka.io.IO
 import akka.pattern.ask
 import akka.util.Timeout
+import org.openqa.selenium.firefox.FirefoxDriver
 import spray.can.Http
 import spray.http.HttpMethods._
 import spray.http._
@@ -15,23 +16,47 @@ import spray.routing._
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
+import moviesearch._
+
 case class Person(name: String, firstName: String, age: Int)
 
-object PersonJsonSupport extends DefaultJsonProtocol {
-  implicit val PortofolioFormats = jsonFormat3(Person)
+object QueryJsonSupport extends DefaultJsonProtocol {
+  implicit val QueryFormat = jsonFormat3(Query)
+}
+
+object ResultJsonSupport extends DefaultJsonProtocol {
+  implicit val ResultFormat = jsonFormat2(Result)
 }
 
 object DockedServer extends App with SimpleRoutingApp {
   // setup
   implicit val actorSystem = ActorSystem()
-  implicit val timeout = Timeout(1.second)
+  implicit val timeout = Timeout(5.second)
   import com.softwaremill.example.DockedServer.actorSystem.dispatcher
 
   // an actor which holds a map of counters which can be queried and updated
   val countersActor = actorSystem.actorOf(Props(new CountersActor()))
+  
+  val firefoxDriver = initFirefoxDriver()
+  
+  def initFirefoxDriver(): FirefoxDriver = {
+    val firefoxDriver: FirefoxDriver = new FirefoxDriver
+
+    val url = "http://rutracker.org/forum/index.php"
+
+    firefoxDriver.get(url)
+
+    firefoxDriver.findElementByName("login_username").sendKeys("Greg89754")
+    firefoxDriver.findElementByName("login_password").sendKeys("parol123")
+    firefoxDriver.findElementByName("login").click()
+    
+    firefoxDriver
+  }
 
   startServer(interface = "0.0.0.0", port = 8080) {
-    import PersonJsonSupport._
+    import QueryJsonSupport._
+    import ResultJsonSupport._
+    
     // simplest route, matching only GET /hello, and sending a "Hello World!" response
     get {
       path("hello") {
@@ -61,19 +86,22 @@ object DockedServer extends App with SimpleRoutingApp {
       get {
         val response: Future[HttpResponse] =
           (IO(Http) ? HttpRequest(GET, Uri("http://google.com"))).mapTo[HttpResponse]
+//          (IO(Http) ? HttpRequest(GET, Uri("https://kickass.so/usearch/фонтан"))).mapTo[HttpResponse]
 
         val bob = Person("Bob", "Parr", 32)
 
         complete {
-          bob
+//          bob
+          response
         }
       } ~
       post {
-        entity(as[Person]) { person =>
+        entity(as[Query]) { query =>
 //          val logger = Logger(LoggerFactory.getLogger("name"))
 //          logger.debug(x.toSt )
 //          complete("OK")
-          complete(s"Person: ${person.name} - favorite number: ${person.age}")
+//          complete(s"Person: ${person.title} - favorite number: ${person.year}")
+          complete(RutrackerQuery.doQuery(query, Some(firefoxDriver)))
         }
       }
     } // the ~ concatenates two routes: if the first doesn't match, the second is tried
