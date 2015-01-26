@@ -23,7 +23,8 @@ libraryDependencies ++= Seq(
   "net.sourceforge.htmlunit" % "htmlunit" % "2.15",
   "org.seleniumhq.selenium" % "selenium-java" % "2.44.0" % "test",
   "org.seleniumhq.selenium" % "selenium-htmlunit-driver" % "2.44.0",
-  "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.44.0"
+  "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.44.0",
+  "com.typesafe" % "config" % "1.2.1"
 )
 
 assemblySettings

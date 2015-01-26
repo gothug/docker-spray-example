@@ -21,7 +21,7 @@ import moviesearch._
 case class Person(name: String, firstName: String, age: Int)
 
 object QueryJsonSupport extends DefaultJsonProtocol {
-  implicit val QueryFormat = jsonFormat3(Query)
+  implicit val QueryFormat = jsonFormat3(RutrackerQuery)
 }
 
 object ResultJsonSupport extends DefaultJsonProtocol {
@@ -31,28 +31,16 @@ object ResultJsonSupport extends DefaultJsonProtocol {
 object DockedServer extends App with SimpleRoutingApp {
   // setup
   implicit val actorSystem = ActorSystem()
-  implicit val timeout = Timeout(5.second)
+  implicit val timeout = Timeout(60.second)
   import com.softwaremill.example.DockedServer.actorSystem.dispatcher
 
   // an actor which holds a map of counters which can be queried and updated
   val countersActor = actorSystem.actorOf(Props(new CountersActor()))
   
-  val firefoxDriver = initFirefoxDriver()
+  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()))
   
-  def initFirefoxDriver(): FirefoxDriver = {
-    val firefoxDriver: FirefoxDriver = new FirefoxDriver
-
-    val url = "http://rutracker.org/forum/index.php"
-
-    firefoxDriver.get(url)
-
-    firefoxDriver.findElementByName("login_username").sendKeys("Greg89754")
-    firefoxDriver.findElementByName("login_password").sendKeys("parol123")
-    firefoxDriver.findElementByName("login").click()
-    
-    firefoxDriver
-  }
-
+//  val firefoxDriver = initFirefoxDriver()
+  
   startServer(interface = "0.0.0.0", port = 8080) {
     import QueryJsonSupport._
     import ResultJsonSupport._
@@ -96,12 +84,16 @@ object DockedServer extends App with SimpleRoutingApp {
         }
       } ~
       post {
-        entity(as[Query]) { query =>
+        entity(as[RutrackerQuery]) { query =>
 //          val logger = Logger(LoggerFactory.getLogger("name"))
 //          logger.debug(x.toSt )
 //          complete("OK")
 //          complete(s"Person: ${person.title} - favorite number: ${person.year}")
-          complete(RutrackerQuery.doQuery(query, Some(firefoxDriver)))
+//          complete(RutrackerQuery.doQuery(query, Some(firefoxDriver)))
+          val result: Future[Result] =
+            (movieQueryActor ? Query(query)).mapTo[Result]
+
+          complete(result)
         }
       }
     } // the ~ concatenates two routes: if the first doesn't match, the second is tried

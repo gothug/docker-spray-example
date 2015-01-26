@@ -13,9 +13,13 @@ import org.openqa.selenium.firefox.FirefoxDriver
 
 //case class Title(value: String, lang: Language.Lang)
 
-case class Query(title: String, titleRus: Option[String], year: Int)
+//case class Query(title: String, titleRus: Option[String], year: Int)
 case class Result(link: String, html: String)
 
 trait MovieQuery {
-  def doQuery(query: Query, firefoxDriver: Option[FirefoxDriver] = None): Result
+  val title: String
+  val titleRus: Option[String]
+  val year: Int
+
+  def doQuery(firefoxDriver: Option[FirefoxDriver] = None): Result
 }

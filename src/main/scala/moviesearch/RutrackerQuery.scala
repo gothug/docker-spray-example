@@ -1,27 +1,25 @@
 package moviesearch
 
+import com.typesafe.scalalogging.slf4j.Logger
 import org.openqa.selenium.firefox.FirefoxDriver
+import org.slf4j.LoggerFactory
 
 /**
  * Created by kojuhovskiy on 22/01/15.
  */
-object RutrackerQuery extends MovieQuery {
-  def doQuery(query: Query, firefoxDriver: Option[FirefoxDriver] = None): Result = {
-//    val driver = new PhantomJSDriver()
+case class RutrackerQuery(title: String, titleRus: Option[String], year: Int) extends MovieQuery {
+  def doQuery(firefoxDriver: Option[FirefoxDriver] = None): Result = {
+    val logger = Logger(LoggerFactory.getLogger("name"))
+    logger.info("doQuery(): STARTED")
+
     val driver = firefoxDriver.getOrElse(new FirefoxDriver)
-    
-//        val driver = firefoxDriver
 
     val url = "http://rutracker.org/forum/index.php"
 
     driver.get(url)
 
-    //    driver.findElementByName("login_username").sendKeys("Greg89754")
-    //    driver.findElementByName("login_password").sendKeys("parol123")
-    //    driver.findElementByName("login").click()
-
-    val queryString = query.titleRus.getOrElse(query.title) + " " + query.year
-
+    val queryString = titleRus.getOrElse(title) + " " + year
+    
     driver.findElementById("search-text").sendKeys(queryString)
 
     driver.findElementByXPath("//form[@id='quick-search']/input[@type='submit']").click()
@@ -38,8 +36,9 @@ object RutrackerQuery extends MovieQuery {
         rootXPath + "/tbody/tr/td[contains(@class, 't-title')]/div/a"
       ).getAttribute("href")
 
-    //    driver.close()
-
-    Result(link, filmListHTML)
+    logger.info("doQuery(): ENDED")
+//    Result(link, filmListHTML)
+    //    Result("link", "")
+    Result(link, "")
   }
 }
