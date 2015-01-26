@@ -3,6 +3,7 @@ package com.softwaremill.example
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.io.IO
 import akka.pattern.ask
+import akka.routing.RoundRobinRouter
 import akka.util.Timeout
 import org.openqa.selenium.firefox.FirefoxDriver
 import spray.can.Http
@@ -37,8 +38,10 @@ object DockedServer extends App with SimpleRoutingApp {
   // an actor which holds a map of counters which can be queried and updated
   val countersActor = actorSystem.actorOf(Props(new CountersActor()))
   
-  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()))
+//  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()))
   
+  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()).withRouter(RoundRobinRouter(2)), "moviequery")
+
 //  val firefoxDriver = initFirefoxDriver()
   
   startServer(interface = "0.0.0.0", port = 8080) {

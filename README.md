@@ -28,7 +28,7 @@ Deploy HowTo
 4. Run image locally (optional) (correctly substitute image id, last param in docker run)
 
     ```
-    docker run --rm -p 9090:8080 82a7df479a58
+    docker run --rm -p 9090:8080 gothug/spray-docker
     boot2docker ip
     curl "http://192.168.59.103:9090/hello"
     ```
@@ -57,6 +57,32 @@ Test requests
 =============
     curl "http://localhost:8080/request"
     curl -v -X POST http://localhost:8080/request -H "Content-Type: application/json" -d '{"name": "Bob", "firstName": "Parr", "age": 32}'
+    
+Useful tips
+===========
+1. Extract a particular file from jar
+
+    jar xvf ~/github/docker-spray-example/target/scala-2.11/docker-spray-example-assembly-1.0.jar reference.conf
+    
+2. See memory usage per process:
+
+    ps -C -O rss
+    
+3. Run java on a box with 512Mb of memory:
+
+    JAVA_OPTS="-Xms250m -Xmx384m" sbt assembly
+
+Useful docker tips
+==================
+1. Run bash inside a docker container:
+
+    sudo docker exec -it <containerIdOrName> bash
+    
+    sudo docker exec -it `docker ps -a | tail -n1 | cut -d' ' -f1` bash
+    
+2. Delete all docker images:
+
+    docker images | awk '{print $3}'  | xargs docker rmi
 
 Docker + Spray example (original)
 =================================
