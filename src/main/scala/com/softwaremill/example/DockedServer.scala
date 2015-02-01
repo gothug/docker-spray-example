@@ -1,28 +1,29 @@
 package com.softwaremill.example
 
 import akka.actor.{Actor, ActorSystem, Props}
-import akka.io.IO
 import akka.pattern.ask
 import akka.routing.RoundRobinRouter
 import akka.util.Timeout
-import org.openqa.selenium.firefox.FirefoxDriver
-import spray.can.Http
-import spray.http.HttpMethods._
-import spray.http._
+import moviesearch._
 import spray.httpx.SprayJsonSupport._
-import spray.httpx.unmarshalling._
 import spray.json.DefaultJsonProtocol
 import spray.routing._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-import moviesearch._
-
 case class Person(name: String, firstName: String, age: Int)
 
-object QueryJsonSupport extends DefaultJsonProtocol {
-  implicit val QueryFormat = jsonFormat3(RutrackerQuery)
+object KickassQueryJsonSupport extends DefaultJsonProtocol {
+  implicit val KickassQueryFormat = jsonFormat3(KickassQuery.apply)
+}
+
+object RutrackerQueryJsonSupport extends DefaultJsonProtocol {
+  implicit val RutrackerQueryFormat = jsonFormat3(RutrackerQuery.apply)
+}
+
+object AfishaQueryJsonSupport extends DefaultJsonProtocol {
+  implicit val AfishaQueryFormat = jsonFormat3(AfishaQuery.apply)
 }
 
 object ResultJsonSupport extends DefaultJsonProtocol {
@@ -40,14 +41,16 @@ object DockedServer extends App with SimpleRoutingApp {
   
 //  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()))
   
-  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()).withRouter(RoundRobinRouter(2)), "moviequery")
+  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()).withRouter(RoundRobinRouter(1)), "moviequery")
 
 //  val firefoxDriver = initFirefoxDriver()
   
   startServer(interface = "0.0.0.0", port = 8080) {
-    import QueryJsonSupport._
-    import ResultJsonSupport._
-    
+    import com.softwaremill.example.KickassQueryJsonSupport._
+    import com.softwaremill.example.RutrackerQueryJsonSupport._
+    import com.softwaremill.example.AfishaQueryJsonSupport._
+    import com.softwaremill.example.ResultJsonSupport._
+
     // simplest route, matching only GET /hello, and sending a "Hello World!" response
     get {
       path("hello") {
@@ -73,33 +76,42 @@ object DockedServer extends App with SimpleRoutingApp {
         }
       }
     } ~
-    path("request") {
-      get {
-        val response: Future[HttpResponse] =
-          (IO(Http) ? HttpRequest(GET, Uri("http://google.com"))).mapTo[HttpResponse]
-//          (IO(Http) ? HttpRequest(GET, Uri("https://kickass.so/usearch/фонтан"))).mapTo[HttpResponse]
-
-        val bob = Person("Bob", "Parr", 32)
-
-        complete {
+    path("search" / "rutracker") {
+//      get {
+//        val bob = Person("Bob", "Parr", 32)
+//        complete {
 //          bob
-          response
-        }
-      } ~
+//        }
+//      } ~
       post {
         entity(as[RutrackerQuery]) { query =>
-//          val logger = Logger(LoggerFactory.getLogger("name"))
-//          logger.debug(x.toSt )
-//          complete("OK")
-//          complete(s"Person: ${person.title} - favorite number: ${person.year}")
-//          complete(RutrackerQuery.doQuery(query, Some(firefoxDriver)))
           val result: Future[Result] =
             (movieQueryActor ? Query(query)).mapTo[Result]
 
           complete(result)
         }
       }
-    } // the ~ concatenates two routes: if the first doesn't match, the second is tried
+    } ~
+    path("search" / "kickass") {
+      post {
+        entity(as[KickassQuery]) { query =>
+          val result: Future[Result] =
+            (movieQueryActor ? Query(query)).mapTo[Result]
+
+          complete(result)
+        }
+      }
+    } ~
+    path("search" / "afisha") {
+      post {
+        entity(as[AfishaQuery]) { query =>
+          val result: Future[Result] =
+            (movieQueryActor ? Query(query)).mapTo[Result]
+
+          complete(result)
+        }
+      }
+    }
   }
 
   // implementation of the actor
