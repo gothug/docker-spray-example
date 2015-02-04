@@ -52,22 +52,24 @@ Deploy HowTo
     ```
     curl "http://188.166.11.149:9090/hello"
     ```
-    
+
 Test requests
 =============
     curl "http://localhost:8080/request"
     curl -v -X POST http://localhost:8080/request -H "Content-Type: application/json" -d '{"name": "Bob", "firstName": "Parr", "age": 32}'
-    
+
+    curl -X POST http://localhost:8080/watchlist/imdb -H "Content-Type: application/json" -d '{"link": "http://www.quickproxy.co.uk/index.php?q=aHR0cDovL3d3dy5pbWRiLmNvbS91c2VyL3VyOTExMjg3OC93YXRjaGxpc3Q%2FcmVmXz13dF9udl93bF9hbGxfMA%3D%3D&hl=2ed"}'
+
 Useful tips
 ===========
 1. Extract a particular file from jar
 
     jar xvf ~/github/docker-spray-example/target/scala-2.11/docker-spray-example-assembly-1.0.jar reference.conf
-    
+
 2. See memory usage per process:
 
     ps -C -O rss
-    
+
 3. Run java on a box with 512Mb of memory:
 
     JAVA_OPTS="-Xms250m -Xmx384m" sbt assembly
@@ -77,9 +79,9 @@ Useful docker tips
 1. Run bash inside a docker container:
 
     sudo docker exec -it <containerIdOrName> bash
-    
+
     sudo docker exec -it `docker ps -a | tail -n1 | cut -d' ' -f1` bash
-    
+
 2. Delete all docker images:
 
     docker images | awk '{print $3}'  | xargs docker rmi
