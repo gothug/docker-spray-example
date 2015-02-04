@@ -5,6 +5,7 @@ import akka.pattern.ask
 import akka.routing.RoundRobinRouter
 import akka.util.Timeout
 import moviesearch._
+import watchlistparser._
 import spray.httpx.SprayJsonSupport._
 import spray.json.DefaultJsonProtocol
 import spray.routing._
@@ -14,20 +15,14 @@ import scala.concurrent.duration._
 
 case class Person(name: String, firstName: String, age: Int)
 
-object KickassQueryJsonSupport extends DefaultJsonProtocol {
+object JsonSupport extends DefaultJsonProtocol {
   implicit val KickassQueryFormat = jsonFormat3(KickassQuery.apply)
-}
-
-object RutrackerQueryJsonSupport extends DefaultJsonProtocol {
   implicit val RutrackerQueryFormat = jsonFormat3(RutrackerQuery.apply)
-}
-
-object AfishaQueryJsonSupport extends DefaultJsonProtocol {
   implicit val AfishaQueryFormat = jsonFormat3(AfishaQuery.apply)
-}
-
-object ResultJsonSupport extends DefaultJsonProtocol {
   implicit val ResultFormat = jsonFormat2(Result)
+
+  implicit val WatchlistQueryFormat = jsonFormat1(WatchListQuery)
+  implicit val WatchlistResultFormat = jsonFormat1(MovieTitles)
 }
 
 object DockedServer extends App with SimpleRoutingApp {
@@ -38,18 +33,15 @@ object DockedServer extends App with SimpleRoutingApp {
 
   // an actor which holds a map of counters which can be queried and updated
   val countersActor = actorSystem.actorOf(Props(new CountersActor()))
-  
+
 //  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()))
-  
+
   val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()).withRouter(RoundRobinRouter(1)), "moviequery")
 
 //  val firefoxDriver = initFirefoxDriver()
-  
+
   startServer(interface = "0.0.0.0", port = 8080) {
-    import com.softwaremill.example.KickassQueryJsonSupport._
-    import com.softwaremill.example.RutrackerQueryJsonSupport._
-    import com.softwaremill.example.AfishaQueryJsonSupport._
-    import com.softwaremill.example.ResultJsonSupport._
+    import com.softwaremill.example.JsonSupport._
 
     // simplest route, matching only GET /hello, and sending a "Hello World!" response
     get {
@@ -107,6 +99,15 @@ object DockedServer extends App with SimpleRoutingApp {
         entity(as[AfishaQuery]) { query =>
           val result: Future[Result] =
             (movieQueryActor ? Query(query)).mapTo[Result]
+
+          complete(result)
+        }
+      }
+    } ~
+    path("watchlist" / "imdb") {
+      post {
+        entity(as[WatchListQuery]) { query =>
+          val result = new Parser().parse(query.link)
 
           complete(result)
         }
