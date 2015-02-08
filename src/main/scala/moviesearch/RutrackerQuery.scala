@@ -1,16 +1,13 @@
 package moviesearch
 
-import com.typesafe.scalalogging.slf4j.Logger
 import org.openqa.selenium.firefox.FirefoxDriver
-import org.slf4j.LoggerFactory
 
 /**
  * Created by kojuhovskiy on 22/01/15.
  */
 case class RutrackerQuery(title: String, titleRus: Option[String], year: Int) extends MovieQuery {
   def doQuery(firefoxDriver: Option[FirefoxDriver] = None): MovieQueryResult = {
-    val logger = Logger(LoggerFactory.getLogger("name"))
-    logger.info("doQuery(): STARTED")
+    logInfo("doQuery(): STARTED")
 
     val driver = firefoxDriver.getOrElse(new FirefoxDriver)
 
@@ -36,8 +33,7 @@ case class RutrackerQuery(title: String, titleRus: Option[String], year: Int) ex
         rootXPath + "/tbody/tr/td[contains(@class, 't-title')]/div/a"
       ).getAttribute("href")
 
-    logger.info("doQuery(): ENDED")
+    logInfo("doQuery(): ENDED")
     MovieQueryResult(link, filmListHTML)
-//    Result(link, "")
   }
 }

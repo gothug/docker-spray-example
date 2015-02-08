@@ -1,6 +1,8 @@
 package moviesearch
 
+import com.typesafe.scalalogging.slf4j.Logger
 import org.openqa.selenium.firefox.FirefoxDriver
+import org.slf4j.LoggerFactory
 
 /**
  * Created by kojuhovskiy on 21/01/15.
@@ -22,4 +24,6 @@ trait MovieQuery {
   val year: Int
 
   def doQuery(firefoxDriver: Option[FirefoxDriver] = None): MovieQueryResult
+
+  def logInfo(info: String) = Logger(LoggerFactory.getLogger(this.getClass.getName)).info(info)
 }
