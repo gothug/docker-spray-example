@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
  * Created by kojuhovskiy on 22/01/15.
  */
 case class RutrackerQuery(title: String, titleRus: Option[String], year: Int) extends MovieQuery {
-  def doQuery(firefoxDriver: Option[FirefoxDriver] = None): Result = {
+  def doQuery(firefoxDriver: Option[FirefoxDriver] = None): MovieQueryResult = {
     val logger = Logger(LoggerFactory.getLogger("name"))
     logger.info("doQuery(): STARTED")
 
@@ -19,7 +19,7 @@ case class RutrackerQuery(title: String, titleRus: Option[String], year: Int) ex
     driver.get(url)
 
     val queryString = titleRus.getOrElse(title) + " " + year
-    
+
     driver.findElementById("search-text").sendKeys(queryString)
 
     driver.findElementByXPath("//form[@id='quick-search']/input[@type='submit']").click()
@@ -37,7 +37,7 @@ case class RutrackerQuery(title: String, titleRus: Option[String], year: Int) ex
       ).getAttribute("href")
 
     logger.info("doQuery(): ENDED")
-    Result(link, filmListHTML)
+    MovieQueryResult(link, filmListHTML)
 //    Result(link, "")
   }
 }

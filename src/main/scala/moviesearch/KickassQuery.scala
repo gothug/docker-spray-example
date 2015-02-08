@@ -9,7 +9,7 @@ import org.openqa.selenium.firefox.FirefoxDriver
  * Created by kojuhovskiy on 21/01/15.
  */
 case class KickassQuery(title: String, titleRus: Option[String], year: Int) extends MovieQuery {
-  def doQuery(firefoxDriver: Option[FirefoxDriver] = None): Result = {
+  def doQuery(firefoxDriver: Option[FirefoxDriver] = None): MovieQueryResult = {
     val root = "https://kickass.so/usearch"
 
     val url = root + "/" + URLEncoder.encode(title, "UTF-8") + " " + year
@@ -21,7 +21,7 @@ case class KickassQuery(title: String, titleRus: Option[String], year: Int) exte
     val href = torrents.get(0).getElementsByTag("a").get(0).attr("href")
     val listHtml = html.html()
 
-    Result(href, listHtml)
+    MovieQueryResult(href, listHtml)
   }
 }
 
