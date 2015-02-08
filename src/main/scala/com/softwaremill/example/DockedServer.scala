@@ -27,7 +27,8 @@ object JsonSupport extends DefaultJsonProtocol {
   implicit val ResultFormat = jsonFormat2(MovieQueryResult.apply)
 
   implicit val WatchlistQueryFormat = jsonFormat1(WatchListQuery)
-  implicit val WatchlistResultFormat = jsonFormat1(MovieTitles)
+  implicit val WatchlistParsedMovieFormat = jsonFormat2(WatchListParsedMovie)
+  implicit val WatchlistResultFormat = jsonFormat1(WatchListMovies)
 }
 
 object DockedServer extends App with SimpleRoutingApp {
