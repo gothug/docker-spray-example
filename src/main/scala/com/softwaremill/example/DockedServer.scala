@@ -6,6 +6,7 @@ import akka.routing.RoundRobinRouter
 import akka.util.Timeout
 import com.typesafe.scalalogging.slf4j.Logger
 import moviesearch._
+import org.openqa.selenium.firefox.FirefoxDriver
 import org.slf4j.LoggerFactory
 import spray.http.{HttpRequest, MediaTypes}
 import watchlistparser._
@@ -40,10 +41,27 @@ object DockedServer extends App with SimpleRoutingApp {
 
   // scheduling mailer
   val mailer = new Mailer()
-//  actorSystem.scheduler.schedule(24 hour, 24 hour)(mailer.processWatchLists())
+  actorSystem.scheduler.schedule(24 hour, 24 hour)(mailer.processWatchLists())
 
-  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()).withRouter(RoundRobinRouter(1)), "moviequery")
-  //  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()))
+  // creating firefox instance
+  val firefoxDriver: FirefoxDriver = initFirefoxDriver()
+
+//  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()).withRouter(RoundRobinRouter(1)), "moviequery")
+  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor(firefoxDriver)), "moviequery")
+
+  def initFirefoxDriver(): FirefoxDriver = {
+    val firefoxDriver: FirefoxDriver = new FirefoxDriver
+
+    val url = "http://rutracker.org/forum/index.php"
+
+    firefoxDriver.get(url)
+
+    firefoxDriver.findElementByName("login_username").sendKeys("Greg89754")
+    firefoxDriver.findElementByName("login_password").sendKeys("parol123")
+    firefoxDriver.findElementByName("login").click()
+
+    firefoxDriver
+  }
 
   startServer(interface = "0.0.0.0", port = 8080) {
     import com.softwaremill.example.JsonSupport._
@@ -93,7 +111,7 @@ object DockedServer extends App with SimpleRoutingApp {
           entity(as[HttpRequest]) {
             obj =>
               logger.info("process-wl called..")
-//              mailer.processWatchLists()
+              mailer.processWatchLists()
               complete { "OK" }
           }
         }
