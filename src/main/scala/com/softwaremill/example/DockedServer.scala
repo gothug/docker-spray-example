@@ -46,8 +46,7 @@ object DockedServer extends App with SimpleRoutingApp {
   // creating firefox instance
   val firefoxDriver: FirefoxDriver = initFirefoxDriver()
 
-//  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()).withRouter(RoundRobinRouter(1)), "moviequery")
-  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor(firefoxDriver)), "moviequery")
+  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor(firefoxDriver)).withRouter(RoundRobinRouter(10)), "moviequery")
 
   def initFirefoxDriver(): FirefoxDriver = {
     val firefoxDriver: FirefoxDriver = new FirefoxDriver
@@ -78,9 +77,9 @@ object DockedServer extends App with SimpleRoutingApp {
     } ~
     path("search" / "kickass") {
       post {
-        entity(as[KickassQuery]) { query =>
+        entity(as[KickassQuery]) { query: MovieQuery =>
           val result: Future[MovieQueryResult] =
-            (movieQueryActor ? Query(query)).mapTo[MovieQueryResult]
+            (movieQueryActor ? Query(query))(180 seconds).mapTo[MovieQueryResult]
 
           complete(result)
         }
