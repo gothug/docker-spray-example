@@ -21,7 +21,7 @@ class Parser {
   def parse(url: String, firefoxDriver: Option[FirefoxDriver] = None) = {
     logger.info("Parsing watchlist..")
 
-    val html = Jsoup.connect(url).timeout(5000).get()
+    val html = Jsoup.connect(url).timeout(10000).get()
 
     val imgMovies = html.body().getElementsByClass("lister-list").first().getElementsByTag("img")
 
@@ -35,7 +35,9 @@ class Parser {
         year = yearRe findFirstIn elem.text
       } yield year.get.toInt
 
-    val watchListMovies = WatchListMovies((movieTitles zip years).map(x => WatchListParsedMovie(x._1, x._2)).toList)
+    def toEngLetters(str: String) = org.apache.commons.lang3.StringUtils.stripAccents(str)
+
+    val watchListMovies = WatchListMovies((movieTitles zip years).map(x => WatchListParsedMovie(toEngLetters(x._1), x._2)).toList)
 
     watchListMovies
   }
