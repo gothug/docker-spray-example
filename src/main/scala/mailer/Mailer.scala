@@ -83,7 +83,7 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
          |       }""".stripMargin
 
     val emailAddresses = Seq(
-//      ("Olga.Goi@gmail.com", "Olga Goi", "to"),
+      ("Olga.Goi@gmail.com", "Olga Goi", "to"),
       ("kojuhovskiy@gmail.com", "Vasek", "to")
     )
 
