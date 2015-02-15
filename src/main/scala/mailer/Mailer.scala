@@ -62,7 +62,7 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
         (WatchListParsedMovie(title, year), link) <- moviesList zip results.map(_.link)
       } yield toHtml(title, year, link)
 
-    sendMail(htmls.mkString("<br>"))
+    sendMail(htmls.mkString)
   }
 
   def sendMail(html: String) = {
