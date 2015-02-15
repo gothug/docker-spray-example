@@ -103,6 +103,7 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
           |   }
           |}""".stripMargin
 
+
     val pipeline: HttpRequest => Future[HttpResponse] = sendReceive
     val response: Future[HttpResponse] = pipeline(Post(url, emailJson))
 

@@ -6,11 +6,11 @@ import akka.routing.RoundRobinRouter
 import akka.util.Timeout
 import com.typesafe.scalalogging.slf4j.Logger
 import moviesearch._
-import org.openqa.selenium.firefox.FirefoxDriver
 import org.slf4j.LoggerFactory
 import spray.http.{HttpRequest, MediaTypes}
 import watchlistparser._
 import spray.httpx.SprayJsonSupport._
+//import spray.json._, DefaultJsonProtocol._
 import spray.json.DefaultJsonProtocol
 import spray.routing._
 
@@ -41,30 +41,39 @@ object DockedServer extends App with SimpleRoutingApp {
 
   // scheduling mailer
   val mailer = new Mailer()
-  actorSystem.scheduler.schedule(1 hour, 8 hour)(mailer.processWatchLists())
+  actorSystem.scheduler.schedule(24 hour, 24 hour)(mailer.processWatchLists())
 
-  // creating firefox instance
-  val firefoxDriver: FirefoxDriver = initFirefoxDriver()
-
-  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor(firefoxDriver)).withRouter(RoundRobinRouter(10)), "moviequery")
-
-  def initFirefoxDriver(): FirefoxDriver = {
-    val firefoxDriver: FirefoxDriver = new FirefoxDriver
-
-    val url = "http://rutracker.org/forum/index.php"
-
-    firefoxDriver.get(url)
-
-    firefoxDriver.findElementByName("login_username").sendKeys("Greg89754")
-    firefoxDriver.findElementByName("login_password").sendKeys("parol123")
-    firefoxDriver.findElementByName("login").click()
-
-    firefoxDriver
-  }
+  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()).withRouter(RoundRobinRouter(1)), "moviequery")
+  //  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor()))
 
   startServer(interface = "0.0.0.0", port = 8080) {
     import com.softwaremill.example.JsonSupport._
 
+    // simplest route, matching only GET /hello, and sending a "Hello World!" response
+//    get {
+//      path("hello") {
+//        complete {
+//          "Hello, 2 Universes!"
+//        }
+//      }
+//    } ~ // the ~ concatenates two routes: if the first doesn't match, the second is tried
+//    path("counter" / Segment) { counterName =>  // extracting the second path component into a closure argument
+//      get {
+//        complete {
+//          (countersActor ? Get(counterName)) // integration with futures
+//            .mapTo[Int]
+//            .map(amount => s"$counterName is: $amount")
+//        }
+//      } ~
+//      post {
+//        parameters("amount".as[Int]) { amount => // the type of the amount closure argument is Int, as specified!
+//          countersActor ! Add(counterName, amount) // fire-and-forget
+//          complete {
+//            "OK"
+//          }
+//        }
+//      }
+//    } ~
     path("search" / "rutracker") {
       post {
         entity(as[RutrackerQuery]) { query =>
@@ -77,9 +86,9 @@ object DockedServer extends App with SimpleRoutingApp {
     } ~
     path("search" / "kickass") {
       post {
-        entity(as[KickassQuery]) { query: MovieQuery =>
+        entity(as[KickassQuery]) { query =>
           val result: Future[MovieQueryResult] =
-            (movieQueryActor ? Query(query))(180 seconds).mapTo[MovieQueryResult]
+            (movieQueryActor ? Query(query)).mapTo[MovieQueryResult]
 
           complete(result)
         }
@@ -109,12 +118,8 @@ object DockedServer extends App with SimpleRoutingApp {
         respondWithMediaType(MediaTypes.`text/plain`) {
           entity(as[HttpRequest]) {
             obj =>
-              logger.info("Handler process-wl called..")
-
-              val f = Future {
-                mailer.processWatchLists()
-              }
-
+              logger.info("process-wl called..")
+              mailer.processWatchLists()
               complete { "OK" }
           }
         }

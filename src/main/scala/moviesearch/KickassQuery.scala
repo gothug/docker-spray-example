@@ -29,7 +29,9 @@ case class KickassQuery(title: String, titleRus: Option[String], year: Int) exte
         val relHref = torrents.get(0).getElementsByTag("a").get(0).attr("href")
         val listHtml = html.html()
 
-        MovieQueryResult(s"$baseUrl$relHref", listHtml)
+        val searchResultUrl = searchRoot + "/" + title + " " + year + "/?field=seeders&sorder=desc"
+
+        MovieQueryResult(searchResultUrl, "obsolete field")
       }
 
     result match {
@@ -47,7 +49,8 @@ case class KickassQuery(title: String, titleRus: Option[String], year: Int) exte
 
 object KickassQuery {
   def main(args: Array[String]) = {
-    val kq = KickassQuery("Cuban Fury", None, 2014)
+//    val kq = KickassQuery("Cuban Fury", None, 2014)
+    val kq = KickassQuery("The Slaughter Rule", None, 2002)
     val result = kq.doQuery()
 
     println(result)
