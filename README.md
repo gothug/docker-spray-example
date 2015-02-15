@@ -56,7 +56,6 @@ Deploy HowTo
 Deploy locally from digital ocean server (the fastest way)
 ==========================================================
 
-    ```
     ssh -i ~/.ssh/id_rsa_digitalocean root@188.166.11.149
     git clone https://github.com/gothug/docker-spray-example.git
     cd docker-spray-example
@@ -64,7 +63,6 @@ Deploy locally from digital ocean server (the fastest way)
     docker build -t="gothug/spray-docker" .
     docker run --rm -p 9090:8080 gothug/spray-docker
     curl "http://188.166.11.149:9090/hello"
-    ```
 
 Test requests
 =============
