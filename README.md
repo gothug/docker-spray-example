@@ -28,7 +28,7 @@ Deploy HowTo
 4. Run image locally (optional) (correctly substitute image id, last param in docker run)
 
     ```
-    docker run --rm -p 9090:8080 gothug/spray-docker
+    docker run -d -p 9090:8080 gothug/spray-docker
     boot2docker ip
     curl "http://192.168.59.103:9090/hello"
     ```
@@ -44,7 +44,7 @@ Deploy HowTo
     ```
     ssh -i ~/.ssh/id_rsa_digitalocean root@188.166.11.149
     docker pull gothug/spray-docker
-    docker run --rm -p 9090:8080 82a7df479a58
+    docker run -d -p 9090:8080 82a7df479a58
     ```
 
 7. Send a test request to the deployed server
@@ -61,7 +61,7 @@ Deploy locally from digital ocean server (the fastest way)
     cd docker-spray-example
     JAVA_OPTS="-Xms250m -Xmx384m" sbt assembly
     docker build -t="gothug/spray-docker" .
-    docker run --rm -p 9090:8080 gothug/spray-docker
+    docker run -d -p 9090:8080 gothug/spray-docker
     curl "http://188.166.11.149:9090/hello"
 
 Test requests
