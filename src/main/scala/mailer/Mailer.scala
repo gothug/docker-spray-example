@@ -19,7 +19,6 @@ import scala.concurrent.duration._
 /**
  * Created by kojuhovskiy on 05/02/15.
  */
-//class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeout, implicit val logger: Logger) {
 class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeout) {
   import actorSystem.dispatcher
 
@@ -81,14 +80,19 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
           |   "key" : "BAXsOmtwxAELZKVQWohlzQ",
           |   "message" : {
           |     "html" : "$htmlEscaped",
-          |     "text" : "http://google.com",
-          |     "subject" : "example subject",
-          |     "from_email" : "kojuhovskiy@gmail.com",
-          |     "from_name" : "Example Name",
+          |     "text" : "text",
+          |     "subject" : "Here are you titles, geek",
+          |     "from_email" : "geek@movie.com",
+          |     "from_name" : "Mr. IMDB geek",
           |     "to" : [
           |       {
           |         "email" : "kojuhovskiy@gmail.com",
           |         "name" : "Vasek",
+          |         "type" : "to"
+          |       },
+          |       {
+          |         "email" : "Olga.Goi@gmail.com",
+          |         "name" : "Olga Goi",
           |         "type" : "to"
           |       }
           |     ],
