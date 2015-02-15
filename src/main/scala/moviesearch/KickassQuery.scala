@@ -14,9 +14,11 @@ case class KickassQuery(title: String, titleRus: Option[String], year: Int) exte
   def doQuery(firefoxDriver: Option[FirefoxDriver] = None): MovieQueryResult = {
     logInfo(s"Handling kickass movie query - ${this.toString}")
 
-    val root = "https://kickass.to/usearch"
+    val baseUrl = "https://kickass.to"
 
-    val url = root + "/" + URLEncoder.encode(title, "UTF-8") + " " + year
+    val searchRoot = s"$baseUrl/usearch"
+
+    val url = searchRoot + "/" + URLEncoder.encode(title, "UTF-8") + " " + year
 
     val result: Try[MovieQueryResult] =
       Try {
@@ -24,17 +26,17 @@ case class KickassQuery(title: String, titleRus: Option[String], year: Int) exte
 
         val torrents = html.body().getElementsByClass("torrentname")
 
-        val href = torrents.get(0).getElementsByTag("a").get(0).attr("href")
+        val relHref = torrents.get(0).getElementsByTag("a").get(0).attr("href")
         val listHtml = html.html()
 
-        MovieQueryResult(href, listHtml)
+        MovieQueryResult(s"$baseUrl$relHref", listHtml)
       }
 
     result match {
       case Success(movieQueryResult) => movieQueryResult
       case Failure(exception)        =>
         if (("Status=404".r findFirstIn exception.toString).isDefined) {
-          MovieQueryResult("Not Found","")
+          MovieQueryResult("NOT FOUND","")
         }
         else {
           throw exception
