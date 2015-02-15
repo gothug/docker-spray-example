@@ -19,6 +19,7 @@ case class KickassQuery(title: String, titleRus: Option[String], year: Int) exte
     val searchRoot = s"$baseUrl/usearch"
 
     val url = searchRoot + "/" + URLEncoder.encode(title, "UTF-8") + " " + year
+//    val url = searchRoot + "/" + title + " " + year
 
     val result: Try[MovieQueryResult] =
       Try {
@@ -50,7 +51,8 @@ case class KickassQuery(title: String, titleRus: Option[String], year: Int) exte
 object KickassQuery {
   def main(args: Array[String]) = {
 //    val kq = KickassQuery("Cuban Fury", None, 2014)
-    val kq = KickassQuery("The Slaughter Rule", None, 2002)
+    val kq = KickassQuery("Kidnapping Mr. Heineken", None, 2015)
+//    val kq = KickassQuery("The Slaughter Rule", None, 2002)
     val result = kq.doQuery()
 
     println(result)

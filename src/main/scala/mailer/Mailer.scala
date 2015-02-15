@@ -28,8 +28,8 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
     def getMovieTitles: WatchListMovies = {
       val pipeline: HttpRequest => Future[WatchListMovies] = sendReceive ~> unmarshal[WatchListMovies]
       val url = "http://localhost:8080/watchlist/imdb"
-      val watchlistLink =
-        "http://www.quickproxy.co.uk/index.php?q=aHR0cDovL3d3dy5pbWRiLmNvbS91c2VyL3VyOTExMjg3OC93YXRjaGxpc3Q%2FcmVmXz13dF9udl93bF9hbGxfMA%3D%3D&hl=2ed"
+      val watchlistLink = "http://www.imdb.com/user/ur9112878/watchlist?ref_=wt_nv_wl_all_0"
+//"http://www.quickproxy.co.uk/index.php?q=aHR0cDovL3d3dy5pbWRiLmNvbS91c2VyL3VyOTExMjg3OC93YXRjaGxpc3Q%2FcmVmXz13dF9udl93bF9hbGxfMA%3D%3D&hl=2ed"
       val response = pipeline(Post(url, WatchListQuery(watchlistLink)))
       Await.result(response, 25 seconds)
     }
@@ -75,6 +75,21 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
 
     val htmlEscaped = html.replace(""""""", """\"""")
 
+    val emailAddressToJson =
+      """|       {
+         |          "email" : "%s",
+         |          "name" : "%s",
+         |          "type" : "%s"
+         |       }""".stripMargin
+
+    val emailAddresses = Seq(
+//      ("Olga.Goi@gmail.com", "Olga Goi", "to"),
+      ("kojuhovskiy@gmail.com", "Vasek", "to")
+    )
+
+    val emailAddressesJson =
+      emailAddresses.map(x => emailAddressToJson.format(x._1, x._2, x._3)).mkString(",\n")
+
     val emailJson =
       s"""|{
           |   "key" : "BAXsOmtwxAELZKVQWohlzQ",
@@ -85,16 +100,7 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
           |     "from_email" : "geek@movie.com",
           |     "from_name" : "Mr. IMDB geek",
           |     "to" : [
-          |       {
-          |         "email" : "kojuhovskiy@gmail.com",
-          |         "name" : "Vasek",
-          |         "type" : "to"
-          |       },
-          |       {
-          |         "email" : "Olga.Goi@gmail.com",
-          |         "name" : "Olga Goi",
-          |         "type" : "to"
-          |       }
+          |$emailAddressesJson
           |     ],
           |     "headers" : {
           |       "Reply-To" : "kojuhovskiy@gmail.com"
