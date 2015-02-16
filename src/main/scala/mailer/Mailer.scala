@@ -82,13 +82,11 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
          |          "type" : "%s"
          |       }""".stripMargin
 
-    val emailAddresses = Seq(
-      ("Olga.Goi@gmail.com", "Olga Goi", "to"),
-      ("kojuhovskiy@gmail.com", "Vasek", "to")
-    )
+    val emailAddresses = user.User.user.accounts
 
     val emailAddressesJson =
-      emailAddresses.map(x => emailAddressToJson.format(x._1, x._2, x._3)).mkString(",\n")
+      emailAddresses.filter(_.subscribed == true).
+        map(x => emailAddressToJson.format(x.email, x.name.getOrElse("Unknown Name"), "to")).mkString(",\n")
 
     val emailJson =
       s"""|{

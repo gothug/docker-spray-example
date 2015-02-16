@@ -30,6 +30,9 @@ object JsonSupport extends DefaultJsonProtocol {
   implicit val WatchlistQueryFormat = jsonFormat1(WatchListQuery)
   implicit val WatchlistParsedMovieFormat = jsonFormat2(WatchListParsedMovie)
   implicit val WatchlistResultFormat = jsonFormat1(WatchListMovies)
+
+  implicit val UserAccountFormat = jsonFormat3(user.UserAccount.apply)
+  implicit val UserFormat = jsonFormat1(user.User.apply)
 }
 
 object DockedServer extends App with SimpleRoutingApp {
@@ -44,9 +47,9 @@ object DockedServer extends App with SimpleRoutingApp {
   actorSystem.scheduler.schedule(24 hour, 24 hour)(mailer.processWatchLists())
 
   // creating firefox instance
-  val firefoxDriver: FirefoxDriver = initFirefoxDriver()
+//  val firefoxDriver: FirefoxDriver = initFirefoxDriver()
 
-  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor(firefoxDriver)).withRouter(RoundRobinRouter(10)), "moviequery")
+  val movieQueryActor = actorSystem.actorOf(Props(new QueryActor(None)).withRouter(RoundRobinRouter(10)), "moviequery")
 
   def initFirefoxDriver(): FirefoxDriver = {
     val firefoxDriver: FirefoxDriver = new FirefoxDriver
@@ -65,6 +68,19 @@ object DockedServer extends App with SimpleRoutingApp {
   startServer(interface = "0.0.0.0", port = 8080) {
     import com.softwaremill.example.JsonSupport._
 
+    path("user") {
+      get {  // read
+        complete(user.User.user)
+      } ~
+      post { // update
+        entity(as[user.UserAccount]) {
+          userAccount => {
+            user.User.user.updateAccounts(userAccount)
+            complete("OK")
+          }
+        }
+      }
+    } ~
     path("search" / "rutracker") {
       post {
         entity(as[RutrackerQuery]) { query =>

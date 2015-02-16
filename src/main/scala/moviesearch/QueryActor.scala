@@ -9,8 +9,8 @@ import org.openqa.selenium.firefox.FirefoxDriver
 
 case class Query(query: MovieQuery)
 
-class QueryActor(firefoxDriver: FirefoxDriver) extends Actor {
+class QueryActor(firefoxDriver: Option[FirefoxDriver] = None) extends Actor {
   override def receive = {
-    case Query(query) => sender ! query.doQuery(Some(firefoxDriver))
+    case Query(query) => sender ! query.doQuery(firefoxDriver)
   }
 }
