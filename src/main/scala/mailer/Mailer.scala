@@ -21,8 +21,12 @@ import scala.concurrent.duration._
  */
 class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeout) {
   import actorSystem.dispatcher
+  import ProcessItemActor._
 
-  val logger = Logger(LoggerFactory.getLogger("mailer"))
+  private val logger = Logger(LoggerFactory.getLogger("mailer"))
+
+  private val processItemActor = actorSystem.actorOf(
+    Props(new ProcessItemActor()).withRouter(RoundRobinRouter(8)), "processitem")
 
   def processWatchLists() = {
     def getMovieTitles: WatchListMovies = {
@@ -34,15 +38,11 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
       Await.result(response, 25 seconds)
     }
 
-    logger.info("Mailer..")
+    logger.info("Mailer - process watchlists called..")
 
     val movieTitles = getMovieTitles
 
     val url = "http://localhost:8080/search/kickass"
-
-    val processItemActor = actorSystem.actorOf(Props(new ProcessItemActor()).withRouter(RoundRobinRouter(8)), "processitem")
-
-    logger.info("Process item Actor created..")
 
     val moviesList = movieTitles.list //.filter(x => ("london".r findFirstIn x.title).isDefined)
 
@@ -128,14 +128,15 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
       logger.info("Problems with sending email")
       logger.info(r.entity.toString)
     }
-
-    val d = 1
   }
 }
 
-case class Item(url: String, query: WatchListParsedMovie)
+object ProcessItemActor {
+  case class Item(url: String, query: WatchListParsedMovie)
+}
 
 class ProcessItemActor() extends Actor {
+  import ProcessItemActor._
   import context.dispatcher
 
   override def receive = {

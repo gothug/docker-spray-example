@@ -6,6 +6,7 @@ import akka.routing.RoundRobinRouter
 import akka.util.Timeout
 import com.typesafe.scalalogging.slf4j.Logger
 import moviesearch._
+import moviesearch.QueryActor._
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.slf4j.LoggerFactory
 import spray.http.{HttpRequest, MediaTypes}
