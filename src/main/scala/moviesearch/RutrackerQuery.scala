@@ -34,6 +34,6 @@ case class RutrackerQuery(title: String, titleRus: Option[String], year: Int) ex
       ).getAttribute("href")
 
     logInfo("doQuery(): ENDED")
-    MovieQueryResult(link, filmListHTML)
+    MovieQueryResult(Some(link))
   }
 }

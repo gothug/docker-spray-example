@@ -42,6 +42,8 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
 
     val processItemActor = actorSystem.actorOf(Props(new ProcessItemActor()).withRouter(RoundRobinRouter(8)), "processitem")
 
+    logger.info("Process item Actor created..")
+
     val moviesList = movieTitles.list //.filter(x => ("london".r findFirstIn x.title).isDefined)
 
     val responses: List[Future[MovieQueryResult]] =
@@ -53,8 +55,13 @@ class Mailer(implicit val actorSystem: ActorSystem, implicit val timeout: Timeou
 
     logger.info("Finished processing..")
 
-    def toHtml(title: String, year: Int, link: String) = {
-      s"""<p>Title: $title, Year: $year<br><a href="$link">$link</a></p>""".stripMargin
+    def toHtml(title: String, year: Int, link: Option[String]) = {
+      val aTag = link match {
+        case Some(x) => s"""<a href="$x">Link</a>"""
+        case None => """<font style="color:red">Not Found</font>"""
+      }
+
+      s"""<p>Title: $title, Year: $year<br>$aTag</p>""".stripMargin
     }
 
     val htmls =

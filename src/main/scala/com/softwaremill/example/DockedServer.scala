@@ -25,7 +25,7 @@ object JsonSupport extends DefaultJsonProtocol {
   implicit val KickassQueryFormat = jsonFormat3(KickassQuery.apply)
   implicit val RutrackerQueryFormat = jsonFormat3(RutrackerQuery.apply)
   implicit val AfishaQueryFormat = jsonFormat3(AfishaQuery.apply)
-  implicit val ResultFormat = jsonFormat2(MovieQueryResult.apply)
+  implicit val ResultFormat = jsonFormat1(MovieQueryResult.apply)
 
   implicit val WatchlistQueryFormat = jsonFormat1(WatchListQuery)
   implicit val WatchlistParsedMovieFormat = jsonFormat2(WatchListParsedMovie)

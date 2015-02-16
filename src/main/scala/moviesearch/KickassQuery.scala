@@ -18,28 +18,28 @@ case class KickassQuery(title: String, titleRus: Option[String], year: Int) exte
 
     val searchRoot = s"$baseUrl/usearch"
 
-    val url = searchRoot + "/" + URLEncoder.encode(title, "UTF-8") + " " + year
-//    val url = searchRoot + "/" + title + " " + year
+    val searchUrl = searchRoot + "/" + title + " " + year + " " +
+      "category:movies -trailer -official seeds:0"
 
     val result: Try[MovieQueryResult] =
       Try {
-        val html = Jsoup.connect(url).timeout(0).get()
+        val html = Jsoup.connect(searchUrl).timeout(0).get()
 
         val torrents = html.body().getElementsByClass("torrentname")
 
         val relHref = torrents.get(0).getElementsByTag("a").get(0).attr("href")
         val listHtml = html.html()
 
-        val searchResultUrl = searchRoot + "/" + title + " " + year + "/?field=seeders&sorder=desc"
+        val searchResultUrl = searchUrl + "?field=seeders&sorder=desc"
 
-        MovieQueryResult(searchResultUrl, "obsolete field")
+        MovieQueryResult(Some(searchResultUrl))
       }
 
     result match {
       case Success(movieQueryResult) => movieQueryResult
       case Failure(exception)        =>
         if (("Status=404".r findFirstIn exception.toString).isDefined) {
-          MovieQueryResult("NOT FOUND","")
+          MovieQueryResult(None)
         }
         else {
           throw exception

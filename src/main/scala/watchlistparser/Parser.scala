@@ -39,6 +39,8 @@ class Parser {
 
     val watchListMovies = WatchListMovies((movieTitles zip years).map(x => WatchListParsedMovie(toEngLetters(x._1), x._2)).toList)
 
+    logger.info("Watchlist parsed successfully")
+
     watchListMovies
   }
 }

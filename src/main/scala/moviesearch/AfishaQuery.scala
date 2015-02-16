@@ -20,7 +20,7 @@ case class AfishaQuery(title: String, titleRus: Option[String], year: Int) exten
     val href = list.getElementsByClass("places-list-item").get(0).getElementsByTag("a").get(0).attr("href")
     val sourceHtml = html.html()
 
-    MovieQueryResult(href, sourceHtml)
+    MovieQueryResult(Some(href))
   }
 }
 

@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory
 //case class Title(value: String, lang: Language.Lang)
 
 //case class Query(title: String, titleRus: Option[String], year: Int)
-case class MovieQueryResult(link: String, html: String)
+case class MovieQueryResult(link: Option[String])
 
 trait MovieQuery {
   val title: String

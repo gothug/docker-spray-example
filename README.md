@@ -66,10 +66,17 @@ Deploy locally from digital ocean server (the fastest way)
 
 Test requests
 =============
+1. General
+
     curl "http://localhost:8080/request"
     curl -v -X POST http://localhost:8080/request -H "Content-Type: application/json" -d '{"name": "Bob", "firstName": "Parr", "age": 32}'
 
     curl -X POST http://localhost:8080/watchlist/imdb -H "Content-Type: application/json" -d '{"link": "http://www.quickproxy.co.uk/index.php?q=aHR0cDovL3d3dy5pbWRiLmNvbS91c2VyL3VyOTExMjg3OC93YXRjaGxpc3Q%2FcmVmXz13dF9udl93bF9hbGxfMA%3D%3D&hl=2ed"}'
+
+2. User service
+
+    curl http://localhost:8080/user
+    curl -X POST http://localhost:8080/user -H "Content-Type: application/json" -d '{"email": "kojuhovskiy@gmail.com", "subscribed": false}'
 
 Useful tips
 ===========
