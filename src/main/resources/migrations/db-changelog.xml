@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet author="gothug" id="1">
+        <createTable tableName="film">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="film_pkey"/>
+            </column>
+            <column name="title" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="year" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="gothug" id="2">
+        <sql>CREATE TYPE source_type AS ENUM ('kickass', 'afisha', 'rutracker')</sql>
+        <createTable tableName="source">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="source_pkey"/>
+            </column>
+            <column name="source" type="source_type">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="gothug" id="3">
+        <createTable tableName="search">
+            <column name="film_id" type="integer">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="source_id" type="integer">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="hash" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="film_id"
+                                 baseTableName="search"
+                                 constraintName="search_film_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="film"/>
+        <addForeignKeyConstraint baseColumnNames="source_id"
+                                 baseTableName="search"
+                                 constraintName="search_source_id_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="source"/>
+    </changeSet>
+</databaseChangeLog>
