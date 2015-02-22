@@ -1,4 +1,4 @@
-package moviesearch
+package mvgk.moviesearch
 
 import org.openqa.selenium.firefox.FirefoxDriver
 

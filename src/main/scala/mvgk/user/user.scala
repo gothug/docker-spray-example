@@ -1,4 +1,4 @@
-package user
+package mvgk.user
 
 /**
  * Created by kojuhovskiy on 16/02/15.

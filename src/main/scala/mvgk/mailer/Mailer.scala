@@ -1,17 +1,18 @@
-package mailer
+package mvgk.mailer
 
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.pattern.ask
 import akka.routing.RoundRobinRouter
 import akka.util.Timeout
-import com.softwaremill.example.JsonSupport._
 import com.typesafe.scalalogging.slf4j.Logger
-import moviesearch.{KickassQuery, MovieQueryResult}
 import org.slf4j.LoggerFactory
 import spray.client.pipelining._
 import spray.http._
 import spray.httpx.SprayJsonSupport._
-import watchlistparser.{WatchListMovies, _}
+import mvgk.moviesearch.{KickassQuery, MovieQueryResult}
+import mvgk.httpservice.JsonSupport._
+import mvgk.watchlistparser.{WatchListMovies, _}
+import mvgk.user
 
 import scala.concurrent._
 import scala.concurrent.duration._

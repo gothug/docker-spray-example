@@ -1,4 +1,4 @@
-package moviesearch
+package mvgk.moviesearch
 
 import akka.actor.Actor
 import org.openqa.selenium.firefox.FirefoxDriver

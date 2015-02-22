@@ -1,4 +1,4 @@
-package moviesearch
+package mvgk.moviesearch
 
 import java.net.URLEncoder
 

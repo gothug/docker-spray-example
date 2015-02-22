@@ -1,24 +1,26 @@
-package com.softwaremill.example
+package mvgk.httpservice
 
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.pattern.ask
 import akka.routing.RoundRobinRouter
 import akka.util.Timeout
 import com.typesafe.scalalogging.slf4j.Logger
-import moviesearch._
-import moviesearch.QueryActor._
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.slf4j.LoggerFactory
 import spray.http.{HttpRequest, MediaTypes}
-import watchlistparser._
 import spray.httpx.SprayJsonSupport._
 import spray.json.DefaultJsonProtocol
 import spray.routing._
 
+import mvgk.moviesearch._
+import mvgk.moviesearch.QueryActor._
+import mvgk.watchlistparser._
+import mvgk.mailer._
+import mvgk.user
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-import mailer._
 
 case class Person(name: String, firstName: String, age: Int)
 
@@ -41,9 +43,9 @@ object DockedServer extends App with SimpleRoutingApp {
   implicit val actorSystem = ActorSystem()
   implicit val timeout = Timeout(60.second)
   val logger = Logger(LoggerFactory.getLogger("default"))
-  import com.softwaremill.example.DockedServer.actorSystem.dispatcher
+  import mvgk.httpservice.DockedServer.actorSystem.dispatcher
 
-  // scheduling mailer
+  // scheduling mvgk.mailer
   val mailer = new Mailer()
   actorSystem.scheduler.schedule(24 hour, 24 hour)(mailer.processWatchLists())
 
@@ -67,14 +69,14 @@ object DockedServer extends App with SimpleRoutingApp {
   }
 
   startServer(interface = "0.0.0.0", port = 8080) {
-    import com.softwaremill.example.JsonSupport._
+    import mvgk.httpservice.JsonSupport._
 
     path("user") {
       get {  // read
         complete(user.User.user)
       } ~
       post { // update
-        entity(as[user.UserAccount]) {
+        entity(as[mvgk.user.UserAccount]) {
           userAccount => {
             user.User.user.updateAccounts(userAccount)
             complete("OK")

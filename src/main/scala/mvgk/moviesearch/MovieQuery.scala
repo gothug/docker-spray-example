@@ -1,4 +1,4 @@
-package moviesearch
+package mvgk.moviesearch
 
 import com.typesafe.scalalogging.slf4j.Logger
 import org.openqa.selenium.firefox.FirefoxDriver
