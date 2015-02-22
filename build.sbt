@@ -8,7 +8,7 @@ scalaVersion := "2.11.5"
 
 resolvers += "spray repo" at "http://repo.spray.io"
 
-mainClass := Some("com.softwaremill.example.DockedServer")
+mainClass := Some("mvgk.httpservice.DockedServer")
 
 val sprayVersion = "1.3.1-20140423"
 
@@ -25,8 +25,8 @@ libraryDependencies ++= Seq(
   "org.seleniumhq.selenium" % "selenium-java" % "2.44.0" % "test",
   "org.seleniumhq.selenium" % "selenium-htmlunit-driver" % "2.44.0",
   "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.44.0",
-  "com.typesafe" % "config" % "1.2.1",
   "com.typesafe.slick" %% "slick" % "2+",
+  "com.typesafe.slick" %% "slick-codegen" % "2+",
   "com.github.tminglei" %% "slick-pg" % "0+",
   "org.liquibase" % "liquibase-core" % "2.0.5"
 )
