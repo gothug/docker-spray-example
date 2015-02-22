@@ -103,3 +103,22 @@ Useful docker tips
 2. Delete all docker images:
 
     docker images | awk '{print $3}'  | xargs docker rmi
+
+Database
+========
+1. Db access
+
+    pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+    psql -d moviedb -U postgres
+
+2. Db create
+
+    sbt "run-main mov.db.DBManager create"
+
+3. Db drop create
+
+    sbt "run-main mov.db.DBManager drop create"
+
+4. Db update
+
+    sbt "run-main mov.db.DBManager update"
