@@ -2,7 +2,7 @@ package sandbox
 
 import java.net.URLEncoder
 
-import moviesearch.RutrackerQuery
+import mvgk.moviesearch.RutrackerQuery
 import org.jsoup.Jsoup
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.htmlunit._
