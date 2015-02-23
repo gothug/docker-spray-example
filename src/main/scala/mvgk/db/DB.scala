@@ -21,7 +21,7 @@ object DB {
   val password = Config.db.password
   val url = "jdbc:postgresql"
 
-  val tables = List(Film)
+  val tables = List(film, resource, search)
   val db = Database.forURL(s"$url://$host/$name", user, password, new Properties(), driver)
   val purePostgres = Database.forURL(s"$url:?user=$user&password=$password", driver = driver)
 

@@ -3,7 +3,7 @@ package mvgk.moviesearch
 import org.openqa.selenium.firefox.FirefoxDriver
 
 /**
- * Created by kojuhovskiy on 22/01/15.
+ * @author Got Hug
  */
 case class RutrackerQuery(title: String, titleRus: Option[String], year: Int) extends MovieQuery {
   def doQuery(firefoxDriver: Option[FirefoxDriver] = None): MovieQueryResult = {
@@ -34,6 +34,6 @@ case class RutrackerQuery(title: String, titleRus: Option[String], year: Int) ex
       ).getAttribute("href")
 
     logInfo("doQuery(): ENDED")
-    MovieQueryResult(Some(link))
+    MovieQueryResult(Some(link), "md5")
   }
 }

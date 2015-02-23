@@ -1,6 +1,7 @@
 package mvgk.db
 
 import com.github.tminglei.slickpg.{PgArraySupport, PgDateSupport, PgEnumSupport}
+import mvgk.db.model.ResourceEnum
 import scala.slick.driver.PostgresDriver
 
 object MyPostgresDriver extends PostgresDriver with PgEnumSupport
@@ -11,9 +12,6 @@ with PgDateSupport {
   override val simple = new SimpleQL with MyEnumImplicits with ArrayImplicits {}
 
   trait MyEnumImplicits {
-//    implicit val statusTypeMapper = createEnumJdbcType("Status", Statuses)
-//    implicit val regimeTypeMapper = createEnumJdbcType("Regime", Regimes)
-//    implicit val productTypeMapper = createEnumJdbcType("Product", Products)
-//    implicit val platformTypeMapper = createEnumJdbcType("Platform", Platforms)
+    implicit val statusTypeMapper = createEnumJdbcType("ResourceEnum", ResourceEnum)
   }
 }

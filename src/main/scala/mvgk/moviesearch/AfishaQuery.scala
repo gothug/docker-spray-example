@@ -1,11 +1,10 @@
 package mvgk.moviesearch
 
-import org.openqa.selenium.firefox.FirefoxDriver
 import org.jsoup.Jsoup
-import java.net.URLEncoder
+import org.openqa.selenium.firefox.FirefoxDriver
 
 /**
- * Created by kojuhovskiy on 01/02/15.
+ * @author Got Hug
  */
 case class AfishaQuery(title: String, titleRus: Option[String], year: Int) extends MovieQuery {
   def doQuery(firefoxDriver: Option[FirefoxDriver] = None): MovieQueryResult = {
@@ -20,7 +19,7 @@ case class AfishaQuery(title: String, titleRus: Option[String], year: Int) exten
     val href = list.getElementsByClass("places-list-item").get(0).getElementsByTag("a").get(0).attr("href")
     val sourceHtml = html.html()
 
-    MovieQueryResult(Some(href))
+    MovieQueryResult(Some(href), "md5")
   }
 }
 

@@ -1,22 +1,21 @@
 package mvgk.httpservice
 
-import akka.actor.{Actor, ActorSystem, Props}
+import akka.actor.{ActorSystem, Props}
 import akka.pattern.ask
 import akka.routing.RoundRobinRouter
 import akka.util.Timeout
 import com.typesafe.scalalogging.slf4j.Logger
+import mvgk.mailer._
+import mvgk.moviesearch.QueryActor._
+import mvgk.moviesearch._
+import mvgk.user
+import mvgk.watchlistparser._
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.slf4j.LoggerFactory
 import spray.http.{HttpRequest, MediaTypes}
 import spray.httpx.SprayJsonSupport._
 import spray.json.DefaultJsonProtocol
 import spray.routing._
-
-import mvgk.moviesearch._
-import mvgk.moviesearch.QueryActor._
-import mvgk.watchlistparser._
-import mvgk.mailer._
-import mvgk.user
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -28,7 +27,7 @@ object JsonSupport extends DefaultJsonProtocol {
   implicit val KickassQueryFormat = jsonFormat3(KickassQuery.apply)
   implicit val RutrackerQueryFormat = jsonFormat3(RutrackerQuery.apply)
   implicit val AfishaQueryFormat = jsonFormat3(AfishaQuery.apply)
-  implicit val ResultFormat = jsonFormat1(MovieQueryResult.apply)
+  implicit val ResultFormat = jsonFormat2(MovieQueryResult.apply)
 
   implicit val WatchlistQueryFormat = jsonFormat1(WatchListQuery)
   implicit val WatchlistParsedMovieFormat = jsonFormat2(WatchListParsedMovie)

@@ -1,14 +1,13 @@
 package mvgk.moviesearch
 
-import java.net.URLEncoder
-
 import org.jsoup.Jsoup
 import org.openqa.selenium.firefox.FirefoxDriver
-
 import scala.util.{Failure, Success, Try}
+import mvgk.util.getMd5
+import scala.collection.JavaConversions._
 
 /**
- * Created by kojuhovskiy on 21/01/15.
+ * @author Got Hug
  */
 case class KickassQuery(title: String, titleRus: Option[String], year: Int) extends MovieQuery {
   def doQuery(firefoxDriver: Option[FirefoxDriver] = None): MovieQueryResult = {
@@ -27,19 +26,20 @@ case class KickassQuery(title: String, titleRus: Option[String], year: Int) exte
 
         val torrents = html.body().getElementsByClass("torrentname")
 
-        val relHref = torrents.get(0).getElementsByTag("a").get(0).attr("href")
+        val foundLinks = torrents.map(_.getElementsByTag("a").get(0).attr("href"))
+
         val listHtml = html.html()
 
         val searchResultUrl = searchUrl + "?field=seeders&sorder=desc"
 
-        MovieQueryResult(Some(searchResultUrl))
+        MovieQueryResult(Some(searchResultUrl), getMd5(foundLinks.mkString))
       }
 
     result match {
       case Success(movieQueryResult) => movieQueryResult
       case Failure(exception)        =>
         if (("Status=404".r findFirstIn exception.toString).isDefined) {
-          MovieQueryResult(None)
+          MovieQueryResult(None, "Unavailable")
         }
         else {
           throw exception
@@ -51,8 +51,10 @@ case class KickassQuery(title: String, titleRus: Option[String], year: Int) exte
 object KickassQuery {
   def main(args: Array[String]) = {
 //    val kq = KickassQuery("Cuban Fury", None, 2014)
-    val kq = KickassQuery("Kidnapping Mr. Heineken", None, 2015)
+//    val kq = KickassQuery("Kidnapping Mr. Heineken", None, 2015)
 //    val kq = KickassQuery("The Slaughter Rule", None, 2002)
+    val kq = KickassQuery("Fountain", None, 2006)
+
     val result = kq.doQuery()
 
     println(result)

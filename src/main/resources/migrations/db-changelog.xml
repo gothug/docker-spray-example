@@ -13,14 +13,17 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        <addUniqueConstraint columnNames="title, year"
+                             constraintName="uniq_film_constraint"
+                             tableName="film"/>
     </changeSet>
     <changeSet author="gothug" id="2">
-        <sql>CREATE TYPE source_type AS ENUM ('kickass', 'afisha', 'rutracker')</sql>
-        <createTable tableName="source">
+        <sql>CREATE TYPE resource_type AS ENUM ('Kickass', 'Afisha', 'Rutracker')</sql>
+        <createTable tableName="resource">
             <column name="id" type="integer" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="source_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="resource_pkey"/>
             </column>
-            <column name="source" type="source_type">
+            <column name="resource" type="resource_type">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -30,7 +33,7 @@
             <column name="film_id" type="integer">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="source_id" type="integer">
+            <column name="resource_id" type="integer">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="hash" type="text">
@@ -45,10 +48,24 @@
                                  constraintName="search_film_id_fk"
                                  referencedColumnNames="id"
                                  referencedTableName="film"/>
-        <addForeignKeyConstraint baseColumnNames="source_id"
+        <addForeignKeyConstraint baseColumnNames="resource_id"
                                  baseTableName="search"
-                                 constraintName="search_source_id_fk"
+                                 constraintName="search_resource_id_fk"
                                  referencedColumnNames="id"
-                                 referencedTableName="source"/>
+                                 referencedTableName="resource"/>
+    </changeSet>
+    <changeSet author="gothug" id="4">
+        <insert tableName="resource">
+            <column name="id" value="1"/>
+            <column name="resource" value="Kickass"/>
+        </insert>
+        <insert tableName="resource">
+            <column name="id" value="2"/>
+            <column name="resource" value="Afisha"/>
+        </insert>
+        <insert tableName="resource">
+            <column name="id" value="3"/>
+            <column name="resource" value="Rutracker"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>

@@ -5,18 +5,9 @@ import org.openqa.selenium.firefox.FirefoxDriver
 import org.slf4j.LoggerFactory
 
 /**
- * Created by kojuhovskiy on 21/01/15.
+ * @author Got Hug
  */
-
-//object Language extends Enumeration {
-//  type Lang = Value
-//  val Rus, Eng = Value
-//}
-
-//case class Title(value: String, lang: Language.Lang)
-
-//case class Query(title: String, titleRus: Option[String], year: Int)
-case class MovieQueryResult(link: Option[String])
+case class MovieQueryResult(link: Option[String], md5: String)
 
 trait MovieQuery {
   val title: String
