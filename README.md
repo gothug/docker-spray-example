@@ -55,8 +55,19 @@ Deploy HowTo
 
 Deploy locally from digital ocean server (the fastest way)
 ==========================================================
+0. Get to server
 
     ssh -i ~/.ssh/id_rsa_digitalocean root@188.166.11.149
+
+1. Build && start postgresql container
+
+    git clone https://github.com/gothug/docker-configs
+    cd docker-configs/postgresql
+    git pull; docker build -t="gothug/postgresql" .
+    docker run -d -p 5432:5432 --name postgres gothug/postgresql
+
+2. Build && start movie service
+
     git clone https://github.com/gothug/docker-spray-example.git
     cd docker-spray-example
     JAVA_OPTS="-Xms250m -Xmx384m" sbt assembly
