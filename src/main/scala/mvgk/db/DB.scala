@@ -9,21 +9,24 @@ import mvgk.db.model.Tables._
 
 import scala.slick.jdbc.StaticQuery
 import scala.util.Try
+import mvgk.util._
 
 /**
  * @author Got Hug
  */
 object DB {
   val driver = "org.postgresql.Driver"
-  val host = Config.db.host
   val name = Config.db.name
   val user = Config.db.user
   val password = Config.db.password
   val url = "jdbc:postgresql"
 
+  val host = getEnvVar("PGSQL_PORT_5432_TCP_ADDR", "localhost")
+  val port = getEnvVar("PGSQL_PORT_5432_TCP_PORT", "5432")
+
   val tables = List(film, resource, search)
-  val db = Database.forURL(s"$url://$host/$name", user, password, new Properties(), driver)
-  val purePostgres = Database.forURL(s"$url:?user=$user&password=$password", driver = driver)
+  val db = Database.forURL(s"$url://$host:$port/$name", user, password, new Properties(), driver)
+  val purePostgres = Database.forURL(s"$url:?port=$port&user=$user&password=$password", driver = driver)
 
   def create(): Unit = {
     purePostgres.withDynSession {

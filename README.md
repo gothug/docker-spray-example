@@ -100,7 +100,11 @@ Useful docker tips
 
     sudo docker exec -it `docker ps -a | tail -n1 | cut -d' ' -f1` bash
 
-2. Delete all docker images:
+2. Get into an image:
+
+    docker run -t -i gothug/postgresql /bin/bash
+
+3. Delete all docker images:
 
     docker images | awk '{print $3}'  | xargs docker rmi
 
@@ -122,3 +126,10 @@ Database
 4. Db update
 
     sbt "run-main mov.db.DBManager update"
+
+Setting up database on server
+=============================
+
+    docker build -t="gothug/postgresql" .
+    docker run -d -p 5432:5432 gothug/postgresql
+    sudo docker run --rm -p 5432:5432 --name pg_test gothug/postgresql
