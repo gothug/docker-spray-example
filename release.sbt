@@ -1,6 +1,8 @@
 import sbtrelease._
 import ReleaseStateTransformations._
 
+import CommandExample._
+
 lazy val execScript = taskKey[Unit]("Execute the shell script")
 
 //lazy val hello = TaskKey[Unit]("hello") := println("hello world!")
@@ -31,7 +33,11 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   setNextVersion,                         // : ReleaseStep
   commitNextVersion,                      // : ReleaseStep
 //  pushChanges,                            // : ReleaseStep, also checks that an upstream branch is properly configured
-  releaseTask(execScript)
+//  releaseTask(execScript)
+  ReleaseStep({ state =>
+    println("Hi!")
+    state
+  })
 //  releaseTask(execScript) : ReleaseStep
 //  runScript
 )
