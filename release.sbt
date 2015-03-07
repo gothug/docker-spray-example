@@ -35,7 +35,7 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
 //  pushChanges,                            // : ReleaseStep, also checks that an upstream branch is properly configured
 //  releaseTask(execScript)
   ReleaseStep({ state =>
-    import scala.sys.process._
+    import scala.sys.process._;
 
     "ls".!
 
