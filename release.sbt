@@ -4,7 +4,7 @@ import ReleaseStateTransformations._
 lazy val runDeploy =
   ReleaseStep({ state =>
     if ("./deploy.sh".! != 0) {
-      sys.error("Error!")
+      sys.error("Error in deploy!")
     }
     state
   })
