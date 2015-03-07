@@ -35,7 +35,8 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
 //  pushChanges,                            // : ReleaseStep, also checks that an upstream branch is properly configured
 //  releaseTask(execScript)
   ReleaseStep({ state =>
-    println("Hi!")
+    execScript
+//    println("Hi!")
     state
   })
 //  releaseTask(execScript) : ReleaseStep
