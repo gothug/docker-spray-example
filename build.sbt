@@ -2,7 +2,7 @@ import sbtassembly.Plugin.AssemblyKeys._
 
 name := "docker-spray-example"
 
-version := "1.0"
+version := "0.0.0"
 
 scalaVersion := "2.11.5"
 
