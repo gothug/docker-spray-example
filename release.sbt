@@ -11,6 +11,7 @@ lazy val runScript : ReleaseStep = ReleaseStep(
   action = { st: State =>
     val extracted = Project.extract(st)
     val ref = extracted.get(thisProjectRef)
+    println("Hello!!!!")
     extracted.runAggregated(execScript, st)
   }
 )
