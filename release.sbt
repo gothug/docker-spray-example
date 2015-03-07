@@ -3,10 +3,11 @@ import ReleaseStateTransformations._
 
 lazy val execScript = taskKey[Unit]("Execute the shell script")
 
-lazy val hello = TaskKey[Unit]("hello") := println("hello world!")
+//lazy val hello = TaskKey[Unit]("hello") := println("hello world!")
 
 execScript := {
-  "/Users/kojuhovskiy/github/docker-spray-example/deploy.sh" !
+//  "/Users/kojuhovskiy/github/docker-spray-example/deploy.sh" !
+  println("hello world!")
 }
 
 lazy val runScript : ReleaseStep = ReleaseStep(
@@ -14,7 +15,7 @@ lazy val runScript : ReleaseStep = ReleaseStep(
     val extracted = Project.extract(st)
     val ref = extracted.get(thisProjectRef)
     execScript
-    extracted.runAggregated(hello, st)
+    extracted.runAggregated(execScript, st)
   }
 )
 
