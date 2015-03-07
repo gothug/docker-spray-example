@@ -2,8 +2,6 @@ import sbtassembly.Plugin.AssemblyKeys._
 
 name := "docker-spray-example"
 
-version := "0.0.0"
-
 scalaVersion := "2.11.5"
 
 resolvers += "spray repo" at "http://repo.spray.io"
