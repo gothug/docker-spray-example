@@ -31,7 +31,7 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   setNextVersion,                         // : ReleaseStep
   commitNextVersion,                      // : ReleaseStep
 //  pushChanges,                            // : ReleaseStep, also checks that an upstream branch is properly configured
-  ReleaseStep(releaseTask(execScript))
+  ReleaseStep(releaseTask(name))
 //  releaseTask(execScript) : ReleaseStep
 //  runScript
 )
