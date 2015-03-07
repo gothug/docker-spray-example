@@ -1,29 +1,31 @@
 import sbtrelease._
 import ReleaseStateTransformations._
-//    import scala.sys.process._
 
-import CommandExample._
+//lazy val execScript = taskKey[Unit]("Execute the shell script")
 
-lazy val execScript = taskKey[Unit]("Execute the shell script")
+lazy val runDeploy =
+  ReleaseStep({ state =>
+    "./deploy.sh".!
+    state
+  })
 
 //lazy val hello = TaskKey[Unit]("hello") := println("hello world!")
 
-execScript := {
+//execScript := {
 //  "/Users/kojuhovskiy/github/docker-spray-example/deploy.sh" !
-  println("hello world!")
-}
+//  println("hello world!")
+//}
 
-lazy val runScript : ReleaseStep = ReleaseStep(
-  action = { st: State =>
-    val extracted = Project.extract(st)
-    val ref = extracted.get(thisProjectRef)
-    execScript
-    extracted.runAggregated(execScript, st)
-  }
-)
+//lazy val runScript : ReleaseStep = ReleaseStep(
+//  action = { st: State =>
+//    val extracted = Project.extract(st)
+//    val ref = extracted.get(thisProjectRef)
+//    execScript
+//    extracted.runAggregated(execScript, st)
+//  }
+//)
 
 ReleaseKeys.releaseProcess := Seq[ReleaseStep](
-//  releaseTask(execScript),
   checkSnapshotDependencies,              // : ReleaseStep
   inquireVersions,                        // : ReleaseStep
   runTest,                                // : ReleaseStep
@@ -34,12 +36,5 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   setNextVersion,                         // : ReleaseStep
   commitNextVersion,                      // : ReleaseStep
 //  pushChanges,                            // : ReleaseStep, also checks that an upstream branch is properly configured
-//  releaseTask(execScript)
-  ReleaseStep({ state =>
-    "./deploy.sh".!
-//    println("Hi!")
-    state
-  })
-//  releaseTask(execScript) : ReleaseStep
-//  runScript
+  runDeploy
 )
