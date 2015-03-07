@@ -1,6 +1,12 @@
 import sbtrelease._
 import ReleaseStateTransformations._
 
+lazy val execScript = taskKey[Unit]("Execute the shell script")
+
+execScript := {
+  "./deploy.sh" !
+}
+
 ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   checkSnapshotDependencies,              // : ReleaseStep
   inquireVersions,                        // : ReleaseStep
@@ -11,5 +17,6 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   //  publishArtifacts,                       // : ReleaseStep, checks whether `publishTo` is properly set up
   setNextVersion,                         // : ReleaseStep
   commitNextVersion,                      // : ReleaseStep
-  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
+  pushChanges,                            // : ReleaseStep, also checks that an upstream branch is properly configured
+  releaseTask(execScript)
 )
