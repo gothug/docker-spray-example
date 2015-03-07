@@ -121,22 +121,27 @@ Useful docker tips
 
 Database
 ========
+0. Setup
+
+    CREATE USER geek WITH SUPERUSER PASSWORD 'q1';
+    CREATE DATABASE geek WITH OWNER = geek;
+
 1. Db access
 
     pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
-    psql -d moviedb -U postgres
+    psql -d moviedb -U geek
 
 2. Db create
 
-    sbt "run-main mov.db.DBManager create"
+    sbt "run-main mvgk.db.DBManager create"
 
 3. Db drop create
 
-    sbt "run-main mov.db.DBManager drop create"
+    sbt "run-main mvgk.db.DBManager drop create"
 
 4. Db update
 
-    sbt "run-main mov.db.DBManager update"
+    sbt "run-main mvgk.db.DBManager update"
 
 Setting up database on server
 =============================

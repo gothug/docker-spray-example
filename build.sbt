@@ -32,3 +32,5 @@ libraryDependencies ++= Seq(
 )
 
 assemblySettings
+
+releaseSettings
