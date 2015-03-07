@@ -8,7 +8,8 @@ execScript := {
 }
 
 ReleaseKeys.releaseProcess := Seq[ReleaseStep](
-  releaseTask(execScript),
+//  releaseTask(execScript),
+  ReleaseStep(releaseTask(execScript)),
   checkSnapshotDependencies,              // : ReleaseStep
   inquireVersions,                        // : ReleaseStep
   runTest,                                // : ReleaseStep
