@@ -7,15 +7,15 @@ execScript := {
   "/Users/kojuhovskiy/github/docker-spray-example/deploy.sh" !
 }
 
-//lazy val runScript : ReleaseStep = ReleaseStep(
-//  action = { st: State =>
-//    val extracted = Project.extract(st)
-//    val ref = extracted.get(thisProjectRef)
-//    println("Hello!!!!")
-//    execScript
-//    extracted.runAggregated(execScript, st)
-//  }
-//)
+lazy val runScript : ReleaseStep = ReleaseStep(
+  action = { st: State =>
+    val extracted = Project.extract(st)
+    val ref = extracted.get(thisProjectRef)
+    println("Hello!!!!")
+    execScript
+    extracted.runAggregated(execScript, st)
+  }
+)
 
 ReleaseKeys.releaseProcess := Seq[ReleaseStep](
 //  releaseTask(execScript),
@@ -29,6 +29,7 @@ ReleaseKeys.releaseProcess := Seq[ReleaseStep](
   setNextVersion,                         // : ReleaseStep
   commitNextVersion,                      // : ReleaseStep
 //  pushChanges,                            // : ReleaseStep, also checks that an upstream branch is properly configured
-  ReleaseStep(releaseTask(execScript))
+//  ReleaseStep(releaseTask(execScript))
 //  releaseTask(execScript) : ReleaseStep
+  runScript
 )
