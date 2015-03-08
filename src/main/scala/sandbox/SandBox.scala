@@ -5,16 +5,7 @@ import java.net.URLEncoder
 import mvgk.moviesearch.RutrackerQuery
 import org.jsoup.Jsoup
 import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.htmlunit._
-
 import scala.reflect.io.File
-
-/**
- * Created by kojuhovskiy on 19/01/15.
- */
-class SandBox {
-
-}
 
 object SandBox {
   def main(args: Array[String]) = {
