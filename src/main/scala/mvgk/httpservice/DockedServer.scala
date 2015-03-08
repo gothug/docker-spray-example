@@ -140,7 +140,7 @@ object DockedServer extends App with SimpleRoutingApp {
     } ~
     path("ping") {
       get {
-        complete("Up 1")
+        complete("Up 2")
       }
     }
   }
