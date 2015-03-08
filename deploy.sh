@@ -12,7 +12,7 @@ cdCmd='cd /root/docker-spray-example/;'
 
 gitPullCmd='echo; echo "- remote git pull:"; git pull;'
 
-sbtAssemblyCmd='echo; echo "- sbt assembly:"; JAVA_OPTS="-Xms50m -Xmx250m" sbt assembly;'
+sbtAssemblyCmd='echo; echo "- sbt assembly:"; JAVA_OPTS="-Xms50m -Xmx300m" sbt assembly;'
 
 createSoftLinkForLatestJarCmd='echo; echo "- create softlink to jar:"; cd target/scala-*.*; ln -sf `find . -name "*.jar" ! -type l | xargs ls -t | head -n1` server.jar; cd -;'
 
