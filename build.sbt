@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
   "org.jsoup" % "jsoup" % "1.8.1",
   "net.sourceforge.htmlunit" % "htmlunit" % "2.15",
   "org.seleniumhq.selenium" % "selenium-java" % "2.44.0" % "test",
-  "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.44.0" % "provided",
+  "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2+",
   "com.typesafe.slick" %% "slick" % "2+",
   "com.typesafe.slick" %% "slick-codegen" % "2+",
   "com.github.tminglei" %% "slick-pg" % "0+",

@@ -70,11 +70,6 @@ object DockedServer extends App with SimpleRoutingApp {
   startServer(interface = "0.0.0.0", port = 8080) {
     import mvgk.httpservice.JsonSupport._
 
-    path("ping") {
-      get {
-        complete("Up 1")
-      }
-    } ~
     path("user") {
       get {  // read
         complete(user.User.user)
@@ -141,6 +136,11 @@ object DockedServer extends App with SimpleRoutingApp {
               complete { "OK" }
           }
         }
+      }
+    } ~
+    path("ping") {
+      get {
+        complete("Up 1")
       }
     }
   }

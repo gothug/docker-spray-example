@@ -12,7 +12,7 @@ cdCmd='cd /root/docker-spray-example/;'
 
 gitPullCmd='echo; echo "- remote git pull:"; git pull;'
 
-sbtAssemblyCmd='echo; echo "- sbt assembly:"; JAVA_OPTS="-Xms50m -Xmx150m" sbt assembly;'
+sbtAssemblyCmd='echo; echo "- sbt assembly:"; JAVA_OPTS="-Xms50m -Xmx250m" sbt assembly;'
 
 dockerBuildCmd='echo; echo "- docker build:"; docker build -t="gothug/spray-docker" .;'
 
