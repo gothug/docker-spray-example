@@ -14,7 +14,7 @@ gitPullCmd='echo; echo "- remote git pull:"; git pull;'
 
 sbtAssemblyCmd='echo; echo "- sbt assembly:"; JAVA_OPTS="-Xms50m -Xmx300m" sbt assembly;'
 
-createSoftLinkForLatestJarCmd='echo; echo "- create softlink to jar:"; cd target/scala-*.*; ln -sf `find . -name "*.jar" ! -type l | xargs ls -t | head -n1` server.jar; cd -;'
+createSoftLinkForLatestJarCmd='echo; echo "- create softlink to jar:"; cd target/scala-*.*; ln -sf `find . -maxdepth 1 -name "*.jar" ! -type l | xargs ls -t | head -n1` server.jar; cd -;'
 
 dockerBuildCmd='echo; echo "- docker build:"; docker build -t="gothug/spray-docker" .;'
 
