@@ -65,6 +65,8 @@ Deploy locally from digital ocean server (the fastest way)
     cd docker-configs/postgresql
     git pull; docker build -t="gothug/postgresql" .
     docker run -d -p 5432:5432 --name postgres gothug/postgresql
+
+    cd ~/docker-spray-example
     JAVA_OPTS="-Xms250m -Xmx384m" sbt "run-main mvgk.db.DBManager drop create"
 
 2. Build && start movie service
@@ -142,10 +144,3 @@ Database
 4. Db update
 
     sbt "run-main mvgk.db.DBManager update"
-
-Setting up database on server
-=============================
-
-    docker build -t="gothug/postgresql" .
-    docker run -d -p 5432:5432 gothug/postgresql
-    sudo docker run --rm -p 5432:5432 --name pg_test gothug/postgresql

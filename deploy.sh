@@ -26,4 +26,5 @@ updateDbCmd='echo; echo "- update db:"; JAVA_OPTS="-Xms250m -Xmx384m" sbt "run-m
 
 dockerStartContainerCmd='echo; echo "- docker start container:"; docker run -d -p 9090:8080 --link postgres:pgsql --name moviegeek gothug/spray-docker;'
 
-ssh -i ~/.ssh/id_rsa_digitalocean root@104.131.98.252 "$cdCmd $gitPullCmd $sbtAssemblyCmd $createSoftLinkForLatestJarCmd $dockerBuildCmd $dockerStopContainerCmd $dockerRemoveContainerCmd $updateDbCmd $dockerStartContainerCmd"
+#ssh -i ~/.ssh/id_rsa_digitalocean root@104.131.98.252 "$cdCmd $gitPullCmd $sbtAssemblyCmd $createSoftLinkForLatestJarCmd $dockerBuildCmd $dockerStopContainerCmd $dockerRemoveContainerCmd $updateDbCmd $dockerStartContainerCmd"
+ssh -i ~/.ssh/id_rsa_vdsina root@109.234.35.251 "$cdCmd $gitPullCmd $sbtAssemblyCmd $createSoftLinkForLatestJarCmd $dockerBuildCmd $dockerStopContainerCmd $dockerRemoveContainerCmd $updateDbCmd $dockerStartContainerCmd"
