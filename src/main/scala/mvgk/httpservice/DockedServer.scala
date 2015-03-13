@@ -116,7 +116,7 @@ object DockedServer extends App with SimpleRoutingApp {
     path("watchlist" / "imdb") {
       post {
         entity(as[WatchListQuery]) { query =>
-          val result = new Parser().parse(query.link)
+          val result = new Parser().parseEnTitlesByMeta(query.link)
 
           complete(result)
         }

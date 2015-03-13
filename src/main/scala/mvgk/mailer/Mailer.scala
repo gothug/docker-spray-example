@@ -247,14 +247,12 @@ class ProcessItemActor() extends Actor {
   }
 }
 
-object Mailer {
-  def main(args: Array[String]) = {
-    implicit val actorSystem = ActorSystem()
-    implicit val timeout = Timeout(30.second)
+object Mailer extends App {
+  implicit val actorSystem = ActorSystem()
+  implicit val timeout = Timeout(30.second)
 
-    val mailer = new Mailer()
-    mailer.processWatchLists()
+  val mailer = new Mailer()
+  mailer.processWatchLists()
 
-    actorSystem.shutdown()
-  }
+  actorSystem.shutdown()
 }

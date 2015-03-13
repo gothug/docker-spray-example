@@ -6,6 +6,10 @@ import org.jsoup.nodes.Element
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.slf4j.LoggerFactory
 import scala.collection.JavaConversions._
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
+import scala.concurrent._
+import ExecutionContext.Implicits.global
 
 case class WatchListParsedMovie(title: String, year: Int)
 case class WatchListMovies(list: List[WatchListParsedMovie])
@@ -13,7 +17,7 @@ case class WatchListMovies(list: List[WatchListParsedMovie])
 case class WatchListQuery(link: String)
 
 /**
- * Created by kojuhovskiy on 02/02/15.
+ * @author Got Hug
  */
 class Parser {
   val logger = Logger(LoggerFactory.getLogger("mvgk/watchlistparser"))
@@ -43,15 +47,58 @@ class Parser {
 
     watchListMovies
   }
+
+  def parseEnTitlesByMeta(url: String): WatchListMovies = {
+    def parseMovie(url: String): WatchListParsedMovie = {
+      val EngText = "[\\x20-\\x7E–]"
+      val Year = "\\d{4}"
+
+      val EngtitleYear = s"($EngText+)[\\s]+\\($EngText*?($Year)$EngText*\\)".r
+
+      val movieHtml = Jsoup.connect(url).timeout(10000).get()
+      val content = movieHtml.getElementsByAttributeValue("property", "og:title").head.attr("content")
+
+      content match {
+        case EngtitleYear(title, year) => WatchListParsedMovie(title, year.toInt)
+        case _ =>
+          throw new Exception(
+            s"Failed to parse English title and year from the string" +
+            s" '$content', movie url $url")
+      }
+
+      /**
+      val movieWidgetHeader =
+        movieHtml.getElementById("title-overview-widget").getElementsByClass("header").head
+      val originalTitle: Option[String] =
+        movieWidgetHeader.getElementsByClass("title-extra").headOption.map(_.ownText)
+        **/
+    }
+
+    logger.info("Parsing watchlist..")
+
+    val html = Jsoup.connect(url).timeout(10000).get()
+
+    val divTitleList =
+      html.body().getElementsByClass("lister-list").first().getElementsByClass("title").toList
+
+    val links = divTitleList.map(_.getElementsByTag("a")).flatMap(_.map(_.absUrl("href")))
+
+    val futures: List[Future[WatchListParsedMovie]] =
+      links map {
+        link =>
+          Future { parseMovie(link) }
+      }
+
+    val parsedMovies = Await.result(Future.sequence(futures), 50 seconds)
+
+    WatchListMovies(parsedMovies)
+  }
 }
 
-object Parser {
-  def main(args: Array[String]) = {
-    val parser = new Parser()
+object Parser extends App {
+  val parser = new Parser()
 
-//    val url = "http://www.imdb.com/mvgk.user/ur9112878/watchlist?ref_=wt_nv_wl_all_0"
-    val url = "http://www.quickproxy.co.uk/index.php?q=aHR0cDovL3d3dy5pbWRiLmNvbS91c2VyL3VyOTExMjg3OC93YXRjaGxpc3Q%2FcmVmXz13dF9udl93bF9hbGxfMA%3D%3D&hl=2ed"
+  val url = "http://www.imdb.com/user/ur9112878/watchlist?ref_=wt_nv_wl_all_0"
 
-    val titles = parser.parse(url)
-  }
+  val titles = parser.parseEnTitlesByMeta(url)
 }
