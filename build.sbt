@@ -27,6 +27,14 @@ libraryDependencies ++= Seq(
   "org.liquibase" % "liquibase-core" % "2.0.5"
 )
 
+buildInfoSettings
+
+sourceGenerators in Compile <+= buildInfo
+
+buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion)
+
+buildInfoPackage := "sbtbuildinfo"
+
 assemblySettings
 
 releaseSettings

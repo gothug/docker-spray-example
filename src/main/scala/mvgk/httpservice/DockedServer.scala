@@ -140,7 +140,12 @@ object DockedServer extends App with SimpleRoutingApp {
     } ~
     path("ping") {
       get {
-        complete("Up 3")
+        complete("Up")
+      }
+    } ~
+    path("version") {
+      get {
+        complete(sbtbuildinfo.BuildInfo.version)
       }
     }
   }
